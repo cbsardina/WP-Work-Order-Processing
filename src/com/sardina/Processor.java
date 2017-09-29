@@ -38,17 +38,19 @@ public class Processor {
 
     private void moveIt() {
         //TODO: move work orders in map from one state to another
-        WorkOrder[] initialArray = new WorkOrder[initialSet.size()];
-        initialSet.toArray(initialArray);
+        in_progressSet.stream()
+                .forEach(workOrder -> doneSet.add(workOrder));
+        assignedSet.stream()
+                .forEach(workOrder -> in_progressSet.add(workOrder));
+        initialSet.stream()
+                .forEach(workOrder -> assignedSet.add(workOrder));
 
-        WorkOrder[] assignedArray = new WorkOrder[assignedSet.size()];
-        assignedSet.toArray(assignedArray);
+        //puts sets in hashmap according to Status
+        mapWorkOrders.put(Status.INITIAL, (HashSet) initialSet);
+        mapWorkOrders.put(Status.ASSIGNED, (HashSet) assignedSet);
+        mapWorkOrders.put(Status.IN_PROGRESS, (HashSet) in_progressSet);
+        mapWorkOrders.put(Status.DONE, (HashSet) doneSet);
 
-        WorkOrder[] in_progressArray = new WorkOrder[in_progressSet.size()];
-        in_progressSet.toArray(in_progressArray);
-
-        WorkOrder[] doneArray = new WorkOrder[doneSet.size()];
-        doneSet.toArray(doneArray);
     } // ---- end moveIt() method ----
 
     private void readIt() {
@@ -70,6 +72,7 @@ public class Processor {
                     //if file is not Status.DONE, add wo to correct set
                     else {
                         if (wo.getStatus().equals(Status.INITIAL)) {
+                            System.out.println("NEW WORK ORDER// Order #: " + wo.getId() + ", Description: " + wo.getDescription() + ", Submitted by: " + wo.getSenderName() + ".");
                             initialSet.add(wo);
                         }
                         else if (wo.getStatus().equals(Status.ASSIGNED)) {
@@ -80,10 +83,6 @@ public class Processor {
                         }
                         else doneSet.add(wo);
                     }
-                    //puts sets in hashmap according to Status
-                    mapWorkOrders.put(Status.INITIAL, (HashSet) initialSet);
-                    mapWorkOrders.put(Status.ASSIGNED, (HashSet) assignedSet);
-                    mapWorkOrders.put(Status.IN_PROGRESS, (HashSet) doneSet);
                 }
                 catch (IOException ex) {
                     ex.printStackTrace();
@@ -119,4 +118,13 @@ public class Processor {
 //            }
 //            }
 
+//TODO: was using on move it but likely don't need
 
+//    WorkOrder[] initialArray = new WorkOrder[initialSet.size()];
+//            initialSet.toArray(initialArray);
+//    WorkOrder[] assignedArray = new WorkOrder[assignedSet.size()];
+//            assignedSet.toArray(assignedArray);
+//    WorkOrder[] in_progressArray = new WorkOrder[in_progressSet.size()];
+//            in_progressSet.toArray(in_progressArray);
+//    WorkOrder[] doneArray = new WorkOrder[doneSet.size()];
+//            doneSet.toArray(doneArray);
