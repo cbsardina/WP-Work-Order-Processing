@@ -30,6 +30,26 @@ public class Processor {
                runProcessor.start();
                readIt();
                moveIt();
+
+                    System.out.println("==================================================");
+
+               System.out.println("INITIAL work orders: ");
+                    System.out.println(mapWorkOrders.get(initialSet));
+                    System.out.println("-------------------------");
+               System.out.println("ASSIGNED work orders: ");
+                    System.out.println(mapWorkOrders.get(assignedSet));
+                    System.out.println("-------------------------");
+               System.out.println("IN-PROGRESS work orders: ");
+                    System.out.println(mapWorkOrders.get(in_progressSet));
+                    System.out.println("-------------------------");
+               System.out.println("DONE work orders: ");
+                    System.out.println(mapWorkOrders.get(doneSet));
+                    System.out.println("-------------------------");
+               System.out.println("Entire work order map: ");
+                    System.out.println(mapWorkOrders.entrySet());
+
+                    System.out.println("==================================================");
+
                runProcessor.sleep(5000l);
            } catch (InterruptedException e) {
                e.printStackTrace();
