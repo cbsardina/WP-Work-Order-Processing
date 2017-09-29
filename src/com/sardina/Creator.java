@@ -9,8 +9,14 @@ import java.util.Scanner;
 
 public class Creator extends WorkOrder{
 
+    public static void main(String args[]) {
+        Creator creator = new Creator();
+        creator.createWorkOrders();
+
+    } // ++++++++++ end Creator.MAIN ++++++++++
+
     public void createWorkOrders() {
-        //TODO: read input, create work orders and write as json files
+        // read input, create work orders and write as json files ✅
         Scanner scanner = new Scanner(System.in);
 
         //ask for input, read, set as variables
@@ -46,14 +52,10 @@ public class Creator extends WorkOrder{
         } catch (IOException ex) {
             ex.printStackTrace(); }
 
-    }
+    } // ===== end createOrders() fn =====
 
-    public static void main(String args[]) {
-        Creator creator = new Creator();
-        creator.createWorkOrders();
-    }
+} // ***** end 'Creator' class *****
 
 
-}
-//TODO:    ***** #1 *****
-//TODO: In Creator have a public static void main that creates an instance of Creator and calls the instance method that loops to get the user input and create work order files. Set an id when the work order is created. Persist the work order to a file in JSON with the id as the file name.
+//    ***** #1 ***** ✅
+// In Creator have a public static void main that creates an instance of Creator and calls the instance method that loops to get the user input and create work order files. Set an id when the work order is created. Persist the work order to a file in JSON with the id as the file name.
