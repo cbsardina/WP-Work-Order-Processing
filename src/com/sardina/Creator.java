@@ -1,6 +1,8 @@
 package com.sardina;
 
-public class Creator {
+import java.util.Scanner;
+
+public class Creator extends WorkOrder {
 
     public void createWorkOrders() {
         //TODO: read input, create work orders and write as json files
@@ -10,6 +12,21 @@ public class Creator {
     public static void main(String args[]) {
         Creator creator = new Creator();
         creator.createWorkOrders();
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter a new 5 digit work order number # # # # # : ");
+            int woId = scanner.nextInt();
+        System.out.println("Enter a work order description: ");
+            String woDescription = scanner.nextLine();
+        System.out.println("Enter your name: ");
+            String woSenderName = scanner.nextLine();
+
+        creator.setId(woId);
+        creator.setDescription(woDescription);
+        creator.setSenderName(woSenderName);
+        creator.setStatus(Status.INITIAL);
+
     }
 
 
