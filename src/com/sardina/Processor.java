@@ -24,49 +24,88 @@ public class Processor {
     HashMap<Status, HashSet> mapWorkOrders = new HashMap<>();
 
     public void processWorkOrders() {
-       Thread runProcessor = new Thread();
-       while (true) {
-           try {
-               runProcessor.start();
-               readIt();
-               moveIt();
 
+        while (true) {
+            try {
+
+                moveIt();
+
+                if (initialSet.isEmpty()){}
+                else {
                     System.out.println("==================================================");
-
-               System.out.println("INITIAL work orders: ");
+                    System.out.println("INITIAL work orders: ");
                     System.out.println(mapWorkOrders.get(initialSet));
                     System.out.println("-------------------------");
-               System.out.println("ASSIGNED work orders: ");
+                }
+                if (assignedSet.isEmpty()){}
+                else {
+                    System.out.println("ASSIGNED work orders: ");
                     System.out.println(mapWorkOrders.get(assignedSet));
                     System.out.println("-------------------------");
-               System.out.println("IN-PROGRESS work orders: ");
+                }
+                if (in_progressSet.isEmpty()) {}
+                else {
+                    System.out.println("IN-PROGRESS work orders: ");
                     System.out.println(mapWorkOrders.get(in_progressSet));
                     System.out.println("-------------------------");
-               System.out.println("DONE work orders: ");
+                }
+                if (in_progressSet.isEmpty()) {}
+                else {
+                    System.out.println("DONE work orders: ");
                     System.out.println(mapWorkOrders.get(doneSet));
                     System.out.println("-------------------------");
-               System.out.println("Entire work order map: ");
+                }
+                if (initialSet.isEmpty() && assignedSet.isEmpty() && in_progressSet.isEmpty() && doneSet.isEmpty()) {}
+                else {
+                    System.out.println("Entire work order map: ");
                     System.out.println(mapWorkOrders.entrySet());
-
                     System.out.println("==================================================");
+                }
 
-               runProcessor.sleep(5000l);
-           } catch (InterruptedException e) {
-               e.printStackTrace();
-           }
-       }
+                readIt();
+
+                Thread.sleep(5000l);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+
 
     } // ===== end processWorkOrders() fn =====
 
     private void moveIt() {
         //TODO: move work orders in map from one state to another
+//        if (initialSet.isEmpty()) {}
+//        initialSet.stream()
+//                .forEach(workOrder -> assignedSet.remove(workOrder));
+//        if (assignedSet.isEmpty()) {}
+//        assignedSet.stream()
+//                .forEach(workOrder -> in_progressSet.add(workOrder));
+//        if (in_progressSet.isEmpty()) {}
+//        in_progressSet.stream()
+//                .forEach(workOrder -> doneSet.add(workOrder));
+//        if (doneSet.isEmpty()) {}
+//        doneSet.stream()
+//                .forEach(workOrder -> doneSet.add(workOrder));
+//
+//        for (int i = mapWorkOrders.size(); i < mapWorkOrders.size(); i++) {
+//
+//        }
+        //TODO: probably don't need function if reader is updating the files.
+        Set<WorkOrder> tempSet1 = new HashSet<>();
+        Set<WorkOrder> tempSet2 = new HashSet<>();
 
-        in_progressSet.stream()
-                .forEach(workOrder -> doneSet.add(workOrder));
-        assignedSet.stream()
-                .forEach(workOrder -> in_progressSet.add(workOrder));
-        initialSet.stream()
-                .forEach(workOrder -> assignedSet.add(workOrder));
+        tempSet1.addAll(assignedSet);
+        assignedSet.removeAll(assignedSet);
+        assignedSet.addAll(initialSet);
+        initialSet.removeAll(initialSet);
+        tempSet2.addAll(in_progressSet);
+        in_progressSet.removeAll(in_progressSet);
+        in_progressSet.addAll(tempSet1);
+        tempSet1.removeAll(tempSet1);
+        doneSet.removeAll(doneSet);
+        doneSet.addAll(tempSet2);
 
         //puts sets in hashmap according to Status
         mapWorkOrders.put(Status.INITIAL, (HashSet) initialSet);
@@ -95,17 +134,23 @@ public class Processor {
                     //if file is not Status.DONE, add wo to correct set
                     else {
                         if (wo.getStatus().equals(Status.INITIAL)) {
-                            System.out.println("NEW WORK ORDER// Order #: " + wo.getId() + ", Description: " + wo.getDescription() + ", Submitted by: " + wo.getSenderName() + ".");
+                            System.out.println("NEW WORK ORDER ENTERED// Order #: " + wo.getId() + ", Description: " + wo.getDescription() + ", Submitted by: " + wo.getSenderName() + ".");
                             initialSet.add(wo);
+                            wo.setStatus(Status.ASSIGNED);
                         }
                         else if (wo.getStatus().equals(Status.ASSIGNED)) {
                             assignedSet.add(wo);
+                            wo.setStatus(Status.IN_PROGRESS);
                         }
                         else if (wo.getStatus().equals(Status.IN_PROGRESS)) {
                             in_progressSet.add(wo);
+                            wo.setStatus(Status.DONE);
                         }
                         else doneSet.add(wo);
                     }
+                    //TODO: pick up write file to string then to .json
+
+
                 }
                 catch (IOException ex) {
                     ex.printStackTrace();
