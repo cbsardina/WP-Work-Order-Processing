@@ -24,20 +24,23 @@ public class Processor {
     HashMap<Status, HashSet> mapWorkOrders = new HashMap<>();
 
     public void processWorkOrders() {
+       Thread runProcessor = new Thread();
+       while (true) {
+           try {
+               runProcessor.start();
+               readIt();
+               moveIt();
+               runProcessor.sleep(5000l);
+           } catch (InterruptedException e) {
+               e.printStackTrace();
+           }
+       }
 
-        moveIt();
-        readIt();
-
-        //sleep looping process
-        try {
-            Thread.sleep(5000l);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     } // ===== end processWorkOrders() fn =====
 
     private void moveIt() {
         //TODO: move work orders in map from one state to another
+
         in_progressSet.stream()
                 .forEach(workOrder -> doneSet.add(workOrder));
         assignedSet.stream()
@@ -118,13 +121,4 @@ public class Processor {
 //            }
 //            }
 
-//TODO: was using on move it but likely don't need
 
-//    WorkOrder[] initialArray = new WorkOrder[initialSet.size()];
-//            initialSet.toArray(initialArray);
-//    WorkOrder[] assignedArray = new WorkOrder[assignedSet.size()];
-//            assignedSet.toArray(assignedArray);
-//    WorkOrder[] in_progressArray = new WorkOrder[in_progressSet.size()];
-//            in_progressSet.toArray(in_progressArray);
-//    WorkOrder[] doneArray = new WorkOrder[doneSet.size()];
-//            doneSet.toArray(doneArray);
