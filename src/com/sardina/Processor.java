@@ -3,6 +3,7 @@ package com.sardina;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -125,32 +126,30 @@ public class Processor {
                     //JSON to Java Object
                     ObjectMapper mapper = new ObjectMapper();
                     WorkOrder wo = mapper.readValue(f, WorkOrder.class);
-                    //check if file currently Status.DONE, if True -> delete
-                    if (wo.getStatus().equals(Status.DONE)) {
-                        System.out.println("Work order #: " + wo.getId() + ", Description: " + wo.getDescription() + ", Submitted by: " + wo.getSenderName() + ", is COMPLETE.");
-
-                        f.delete();
-                    }
                     //if file is not Status.DONE, add wo to correct set
-                    else {
                         if (wo.getStatus().equals(Status.INITIAL)) {
                             System.out.println("NEW WORK ORDER ENTERED// Order #: " + wo.getId() + ", Description: " + wo.getDescription() + ", Submitted by: " + wo.getSenderName() + ".");
                             initialSet.add(wo);
                             wo.setStatus(Status.ASSIGNED);
+                            reWriteFile(wo);
                         }
                         else if (wo.getStatus().equals(Status.ASSIGNED)) {
                             assignedSet.add(wo);
                             wo.setStatus(Status.IN_PROGRESS);
+                            reWriteFile(wo);
                         }
                         else if (wo.getStatus().equals(Status.IN_PROGRESS)) {
                             in_progressSet.add(wo);
                             wo.setStatus(Status.DONE);
+                            reWriteFile(wo);
                         }
-                        else doneSet.add(wo);
-                    }
-                    //TODO: pick up write file to string then to .json
+                        //check if file currently Status.DONE, if True -> delete
+                        else if (wo.getStatus().equals(Status.DONE)) {
+                            doneSet.add(wo);
+                            System.out.println("Work order #: " + wo.getId() + ", Description: " + wo.getDescription() + ", Submitted by: " + wo.getSenderName() + ", is COMPLETE.");
 
-
+                            f.delete();
+                        }
                 }
                 catch (IOException ex) {
                     ex.printStackTrace();
@@ -158,6 +157,21 @@ public class Processor {
             } //end if
         } //end forEach loop
     } // ---- end readIt() method ----
+
+    public void reWriteFile (WorkOrder wo) {
+
+        try {
+            String tempFileString = wo.toString();
+            File jsonFile = new File(wo.getId() + ".json");
+            FileWriter newFile = new FileWriter(jsonFile);
+
+            newFile.write(tempFileString);
+            newFile.close();
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
 
 } // ***** end 'Processor' class *****
 
