@@ -53,36 +53,34 @@ public class Processor {
         mapWorkOrders.put(Status.IN_PROGRESS, (HashSet) in_progressSet);
         mapWorkOrders.put(Status.DONE, (HashSet) doneSet);
 
-        if (initialSet.isEmpty()){}
-        else {
-            System.out.println("==================================================");
+        if (!initialSet.isEmpty()){
+            System.out.println("--------------------------------------------------");
             System.out.println("INITIAL work orders: ");
             System.out.println(mapWorkOrders.get(initialSet));
-            System.out.println("-------------------------");
+            System.out.println(".........................");
         }
-        if (assignedSet.isEmpty()){}
-        else {
+        if (!assignedSet.isEmpty()){
             System.out.println("ASSIGNED work orders: ");
             System.out.println(mapWorkOrders.get(assignedSet));
-            System.out.println("-------------------------");
+            System.out.println(".........................");
         }
-        if (in_progressSet.isEmpty()) {}
-        else {
+        if (!in_progressSet.isEmpty()) {
             System.out.println("IN-PROGRESS work orders: ");
             System.out.println(mapWorkOrders.get(in_progressSet));
-            System.out.println("-------------------------");
+            System.out.println(".........................");
         }
-        if (in_progressSet.isEmpty()) {}
-        else {
+        if (!in_progressSet.isEmpty()) {
             System.out.println("DONE work orders: ");
             System.out.println(mapWorkOrders.get(doneSet));
-            System.out.println("-------------------------");
+            System.out.println(".........................");
         }
-        if (initialSet.isEmpty() && assignedSet.isEmpty() && in_progressSet.isEmpty() && doneSet.isEmpty()) {}
+        if (initialSet.isEmpty() && assignedSet.isEmpty() && in_progressSet.isEmpty() && doneSet.isEmpty()) {
+
+        }
         else {
             System.out.println("Entire work order map: ");
             System.out.println(mapWorkOrders.entrySet());
-            System.out.println("==================================================");
+            System.out.println("--------------------------------------------------");System.out.println("");
         }
     } // ---- end moveIt() method ----
 
@@ -98,7 +96,8 @@ public class Processor {
                     WorkOrder wo = mapper.readValue(f, WorkOrder.class);
                     //if file is not Status.DONE, add wo to correct set
                         if (wo.getStatus().equals(Status.INITIAL)) {
-                            System.out.println("NEW WORK ORDER ENTERED// Order #: " + wo.getId() + ", Description: " + wo.getDescription() + ", Submitted by: " + wo.getSenderName() + ".");
+                            System.out.println("* * * * * NEW WORK ORDER * * * * *");
+                            System.out.println("NEW WORK ORDER ENTERED// Order #: " + wo.getId() + ", Description: " + wo.getDescription() + ", Submitted by: " + wo.getSenderName() + ".");System.out.println("");
                             initialSet.add(wo);
                             wo.setStatus(Status.ASSIGNED);
                             reWriteFile(wo);
@@ -116,7 +115,8 @@ public class Processor {
                         //check if file currently Status.DONE, if True -> delete
                         else if (wo.getStatus().equals(Status.DONE)) {
                             doneSet.add(wo);
-                            System.out.println("Work order #: " + wo.getId() + ", Description: " + wo.getDescription() + ", Submitted by: " + wo.getSenderName() + ", is COMPLETE.");
+                            System.out.println("* * * * * COMPLETE WORK ORDER * * * * *");
+                            System.out.println("Work order #: " + wo.getId() + ", Description: " + wo.getDescription() + ", Submitted by: " + wo.getSenderName() + ", is COMPLETE.");System.out.println("");
 
                             f.delete();
                         }
