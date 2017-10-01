@@ -10,52 +10,60 @@ import java.util.Scanner;
 public class Creator extends WorkOrder{
 
     public static void main(String args[]) {
-        Creator creator = new Creator();
-        creator.createWorkOrders();
+
+        runCreator();
 
     } // ++++++++++ end Creator.MAIN ++++++++++
 
+    public static void runCreator () {
+        while (true) {
+            Scanner scanner = new Scanner(System.in);
+
+            System.out.println("Enter (N) for a new work order: ");
+                String woN = scanner.nextLine().toUpperCase();
+
+            if (woN.contentEquals("N")) {
+                Creator creator = new Creator();
+                creator.createWorkOrders();
+            }
+        }
+    } // ----- end runCreator () -----
+
     public void createWorkOrders() {
-        // read input, create work orders and write as json files ✅
-        Scanner scanner = new Scanner(System.in);
+            Scanner scanner = new Scanner(System.in);
 
-        //ask for input, read, set as variables
-        System.out.println("Enter your name: ");
-            String woSenderName = scanner.nextLine();
-        System.out.println("Enter a work order description: ");
-            String woDescription = scanner.nextLine();
-        System.out.println("Enter a new 5 digit work order number # # # # # : ");
-            int woId = scanner.nextInt();
+            //ask for input, read, set as variables
+            System.out.println("Enter your name: ");
+                String woSenderName = scanner.nextLine();
+            System.out.println("Enter a work order description: ");
+                String woDescription = scanner.nextLine();
+            System.out.println("Enter a new 5 digit work order number # # # # # : ");
+                int woId = scanner.nextInt();
 
-        //create w/o
-        WorkOrder createWrkOrder = new WorkOrder();
-            createWrkOrder.setId(woId);
-            createWrkOrder.setDescription(woDescription);
-            createWrkOrder.setSenderName(woSenderName);
-            createWrkOrder.setStatus(Status.INITIAL);
+            //create w/o
+            WorkOrder createWrkOrder = new WorkOrder();
+                createWrkOrder.setId(woId);
+                createWrkOrder.setDescription(woDescription);
+                createWrkOrder.setSenderName(woSenderName);
+                createWrkOrder.setStatus(Status.INITIAL);
 
-        //write w/o as .json
-        String jsonWorkOrder = "";
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            jsonWorkOrder = mapper.writeValueAsString(createWrkOrder);
-        } catch (IOException ex) {
-            ex.printStackTrace(); }
+            //write w/o as .json
+            String jsonWorkOrder = "";
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                jsonWorkOrder = mapper.writeValueAsString(createWrkOrder);
+            } catch (IOException ex) {
+                ex.printStackTrace(); }
 
-        //Create VIN.json file for the new instance of vehicleInfo
-        try {
-            File jsonFile = new File(createWrkOrder.getId() + ".json");
-            FileWriter newFile = new FileWriter(jsonFile);
+            //Create VIN.json file for the new instance of vehicleInfo
+            try {
+                File jsonFile = new File(createWrkOrder.getId() + ".json");
+                FileWriter newFile = new FileWriter(jsonFile);
 
-            newFile.write(jsonWorkOrder);
-            newFile.close();
-        } catch (IOException ex) {
-            ex.printStackTrace(); }
-
-    } // ===== end createOrders() fn =====
+                newFile.write(jsonWorkOrder);
+                newFile.close();
+            } catch (IOException ex) {
+                ex.printStackTrace(); }
+    }  // ----- end createOrders() fn -----
 
 } // ***** end 'Creator' class *****
-
-
-//    ***** #1 ***** ✅
-// In Creator have a public static void main that creates an instance of Creator and calls the instance method that loops to get the user input and create work order files. Set an id when the work order is created. Persist the work order to a file in JSON with the id as the file name.
